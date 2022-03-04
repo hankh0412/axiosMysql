@@ -15,6 +15,9 @@ const con = mysql.createConnection({
 
 
 exports.handler = async (event, context, callback) => {
+
+  let startTime = new Date().getTime();
+
   const response = await axios.get(
     process.env.API_URL
   );
@@ -56,7 +59,7 @@ exports.handler = async (event, context, callback) => {
   });
 
 
-  response.data.response.body.items.item.forEach(element => {
+  await response.data.response.body.items.item.forEach(element => {
     // console.log(element.addr);
     const sql = `
       INSERT INTO B551182_${cur_dt}
@@ -72,6 +75,10 @@ exports.handler = async (event, context, callback) => {
   });
 
   con.end();
+
+
+  let endTime = new Date().getTime();
+  console.log(endTime - startTime);
 
   return "Data inserted";
 
