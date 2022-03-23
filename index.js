@@ -59,7 +59,7 @@ exports.handler = async (event, context, callback) => {
   });
 
 
-  await response.data.response.body.items.item.forEach(element => {
+  const promises = response.data.response.body.items.item.map(async element => {
     // console.log(element.addr);
     const sql = `
       INSERT INTO B551182_${cur_dt}
@@ -73,12 +73,13 @@ exports.handler = async (event, context, callback) => {
       }
     })
   });
+  await Promise.all(promises);
 
   con.end();
 
 
   let endTime = new Date().getTime();
-  console.log(endTime - startTime);
+  console.log('소요시간: ',endTime - startTime);
 
   return "Data inserted";
 
